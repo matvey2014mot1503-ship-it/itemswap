@@ -111,13 +111,23 @@ public class ConfigScreen extends Screen {
         next.active = rules.size() > 1;
         addDrawableChild(next);
 
-        // Задержка между заменами
-        field(left, y4 + 36, 300, String.valueOf(delayMs), "Задержка, мс (0 = без задержки)", v -> {
-            try {
-                delayMs = Math.max(0, Math.min(5000, Integer.parseInt(v.trim())));
-            } catch (NumberFormatException ignored) {
-            }
-        });
+        // Задержка между заменами: кнопки - и +
+        int dy = y4 + 30;
+        addDrawableChild(ButtonWidget.builder(Text.literal("-"), b -> {
+            delayMs = Math.max(0, delayMs - 50);
+            clearAndInit();
+        }).dimensions(left, dy, 30, 20).build());
+
+        ButtonWidget delayLabel = ButtonWidget.builder(
+                Text.literal("Пауза между заменами: " + delayMs + " мс"), b -> {})
+                .dimensions(left + 35, dy, 230, 20).build();
+        delayLabel.active = false;
+        addDrawableChild(delayLabel);
+
+        addDrawableChild(ButtonWidget.builder(Text.literal("+"), b -> {
+            delayMs = Math.min(2000, delayMs + 50);
+            clearAndInit();
+        }).dimensions(left + 270, dy, 30, 20).build());
 
         // Готово / Отмена
         addDrawableChild(ButtonWidget.builder(Text.literal("Готово"), b -> {
@@ -148,7 +158,6 @@ public class ConfigScreen extends Screen {
         int y4 = y2 + 36 + 28;
 
         context.drawCenteredTextWithShadow(textRenderer, title, cx, 12, 0xFFFFFF);
-        context.drawTextWithShadow(textRenderer, Text.literal("Пауза между заменами (мс)"), left, y4 + 24, 0xA0A0A0);
 
         if (rules.isEmpty()) {
             context.drawCenteredTextWithShadow(textRenderer,
