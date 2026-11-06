@@ -114,7 +114,7 @@ public class ConfigScreen extends Screen {
         // Задержка между заменами: кнопки - и +
         int dy = y4 + 30;
         addDrawableChild(ButtonWidget.builder(Text.literal("-"), b -> {
-            delayMs = Math.max(0, delayMs - 50);
+            delayMs = Math.max(0, delayMs - (delayMs > 1000 ? 500 : 50));
             clearAndInit();
         }).dimensions(left, dy, 30, 20).build());
 
@@ -125,7 +125,7 @@ public class ConfigScreen extends Screen {
         addDrawableChild(delayLabel);
 
         addDrawableChild(ButtonWidget.builder(Text.literal("+"), b -> {
-            delayMs = Math.min(2000, delayMs + 50);
+            delayMs = Math.min(10000, delayMs + (delayMs >= 1000 ? 500 : 50));
             clearAndInit();
         }).dimensions(left + 270, dy, 30, 20).build());
 
