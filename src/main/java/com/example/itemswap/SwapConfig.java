@@ -18,6 +18,8 @@ public class SwapConfig {
     public static SwapConfig INSTANCE = new SwapConfig();
 
     public List<Rule> rules = new ArrayList<>();
+    /** Минимальная пауза между заменами, мс (0 = без паузы) */
+    public int delayMs = 100;
 
     public static class Matcher {
         public String item = "minecraft:totem_of_undying";

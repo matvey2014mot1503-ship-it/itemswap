@@ -17,10 +17,12 @@ public class ConfigScreen extends Screen {
     private final Screen parent;
     private final List<SwapConfig.Rule> rules = new ArrayList<>();
     private int index = 0;
+    private int delayMs;
 
     public ConfigScreen(Screen parent) {
         super(Text.literal("Item Swap"));
         this.parent = parent;
+        this.delayMs = SwapConfig.INSTANCE.delayMs;
         for (SwapConfig.Rule r : SwapConfig.INSTANCE.rules) {
             rules.add(copy(r));
         }
@@ -54,7 +56,7 @@ public class ConfigScreen extends Screen {
         int y2 = y1 + 36;
         int y3 = y2 + 36;
         int y4 = y3 + 28;
-        int bottom = Math.max(height - 27, y4 + 28);
+        int bottom = Math.max(height - 27, y4 + 64);
 
         if (!rules.isEmpty()) {
             SwapConfig.Rule r = rules.get(index);
@@ -109,9 +111,18 @@ public class ConfigScreen extends Screen {
         next.active = rules.size() > 1;
         addDrawableChild(next);
 
+        // Задержка между заменами
+        field(left, y4 + 36, 300, String.valueOf(delayMs), "Задержка, мс (0 = без задержки)", v -> {
+            try {
+                delayMs = Math.max(0, Math.min(5000, Integer.parseInt(v.trim())));
+            } catch (NumberFormatException ignored) {
+            }
+        });
+
         // Готово / Отмена
         addDrawableChild(ButtonWidget.builder(Text.literal("Готово"), b -> {
             SwapConfig.INSTANCE.rules = new ArrayList<>(rules);
+            SwapConfig.INSTANCE.delayMs = delayMs;
             SwapConfig.save();
             client.setScreen(parent);
         }).dimensions(left, bottom, 145, 20).build());
@@ -137,6 +148,7 @@ public class ConfigScreen extends Screen {
         int y4 = y2 + 36 + 28;
 
         context.drawCenteredTextWithShadow(textRenderer, title, cx, 12, 0xFFFFFF);
+        context.drawTextWithShadow(textRenderer, Text.literal("Пауза между заменами (мс)"), left, y4 + 24, 0xA0A0A0);
 
         if (rules.isEmpty()) {
             context.drawCenteredTextWithShadow(textRenderer,

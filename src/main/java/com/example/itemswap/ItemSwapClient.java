@@ -21,6 +21,7 @@ public class ItemSwapClient implements ClientModInitializer {
 
     private final KeyBinding[] keys = new KeyBinding[MAX_RULES];
     private KeyBinding reloadKey;
+    private long lastSwap = 0;
 
     @Override
     public void onInitializeClient() {
@@ -47,8 +48,11 @@ public class ItemSwapClient implements ClientModInitializer {
         for (int i = 0; i < MAX_RULES; i++) {
             while (keys[i].wasPressed()) {
                 if (mc.currentScreen != null) continue;
+                long now = System.currentTimeMillis();
+                if (now - lastSwap < SwapConfig.INSTANCE.delayMs) continue;
                 List<SwapConfig.Rule> rules = SwapConfig.INSTANCE.rules;
                 if (i < rules.size()) {
+                    lastSwap = now;
                     swap(mc, mc.player, rules.get(i));
                 }
             }
