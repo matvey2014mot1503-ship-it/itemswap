@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "itemswap",
+  "version": "1.0.0",
+  "name": "Item Swap",
+  "description": "Swap items (totem, sphere, talisman...) into your offhand or hand with a configurable key. Configurable in Mod Menu.",
+  "authors": [],
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.example.itemswap.ItemSwapClient"],
+    "modmenu": ["com.example.itemswap.ModMenuIntegration"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
